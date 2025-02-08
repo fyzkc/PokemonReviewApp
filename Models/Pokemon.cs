@@ -13,5 +13,10 @@
 
         //this means every pokemon can has many reviews. 
         public ICollection<Review> Reviews { get; set; }
+
+
+        //for many-to-many relationship, we should use the join tables
+        public ICollection<PokemonOwner> PokemonOwners { get; set; }
+        public ICollection<PokemonCategory> PokemonCategories { get; set; }
     }
 }

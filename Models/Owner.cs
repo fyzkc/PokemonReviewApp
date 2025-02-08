@@ -12,5 +12,7 @@
         //this means, every owner can has only one country.
         public Country Country { get; set; }
 
+        public ICollection<PokemonOwner> PokemonOwners { get; set; }
+
     }
 }

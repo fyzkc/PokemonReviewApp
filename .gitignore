@@ -1,0 +1,14 @@
+bin/
+obj/
+*.exe
+*.dll
+logs/
+*.log
+.vs/
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+secrets.json
+*.env
+Properties/launchSettings.json
+appsettings.json

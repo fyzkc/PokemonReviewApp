@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-
+        public int Rating { get; set; }
         //every review can has only one reviewer at a time. 
         public Reviewer Reviewer { get; set; }
 

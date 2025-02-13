@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using PokemonReviewApp.Dto;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
 
@@ -12,9 +14,11 @@ namespace PokemonReviewApp.Controllers
         // whatever the class that inherits the IPokemonRepository can be injected here. 
         // The injection will be made in Program.cs.
         private readonly IPokemonRepository _pokemonRepository;
-        public PokemonController(IPokemonRepository pokemonRepository)
+        private readonly IMapper _mapper;
+        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper)
         {
             _pokemonRepository = pokemonRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -22,7 +26,7 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetPokemons()
         {
             // it calls the GetPokemons method from the repository that we injected in the constructor. 
-            var pokemons = _pokemonRepository.GetPokemons();
+            var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
 
             if (!ModelState.IsValid) //it controls if the request is valid or not. 
             {
@@ -41,7 +45,7 @@ namespace PokemonReviewApp.Controllers
             if (!_pokemonRepository.IfPokemonExists(pokemonId)) // first we are checking the pokemon is whether exists or not. 
                 return NotFound();
 
-            var pokemon = _pokemonRepository.GetById(pokemonId); // then if it can find the pokemon then we are running the GetById mwthod for getting thw details of the pokemon.
+            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepository.GetById(pokemonId)); // then if it can find the pokemon then we are running the GetById mwthod for getting thw details of the pokemon.
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -54,7 +58,7 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetPokemonRating(int pokemonId) // if it will be a different name from the url's, than it will require 2 variable for id area. and thats not what we want. 
         {
             if(!_pokemonRepository.IfPokemonExists(pokemonId))
-                return NotFound();
+                return NotFound(); // the IActionResult interface allow us to use these methods. 
 
             var rating = _pokemonRepository.GetPokemonRating(pokemonId);
 

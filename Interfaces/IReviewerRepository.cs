@@ -5,8 +5,9 @@ namespace PokemonReviewApp.Interfaces
     public interface IReviewerRepository
     {
         ICollection<Reviewer> GetReviewers();
-        Review GetById(int reviewerId);
-        bool IfReviewExists(int reviewerId);
+        Reviewer GetById(int reviewerId);
+        bool IfReviewerExists(int reviewerId);
+        Reviewer GetReviewerByReview(int reviewId);
 
     }
 }

@@ -48,7 +48,7 @@ namespace PokemonReviewApp.Controllers
         }
 
 
-        [HttpGet("byreveiwer/{reviewerId}")]
+        [HttpGet("{reviewerId}/review")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
         public IActionResult GetReviewsByReviewer(int reviewerId)
         {
@@ -60,7 +60,7 @@ namespace PokemonReviewApp.Controllers
         }
 
 
-        [HttpGet("bypokemon/{pokemonId}")]
+        [HttpGet("pokemon/{pokemonId}/review")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
         public IActionResult GetReviewsByPokemon(int pokemonId)
         {

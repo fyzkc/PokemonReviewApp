@@ -48,19 +48,19 @@ namespace PokemonReviewApp.Controllers
         }
 
 
-        [HttpGet("reviewer/{reviewId}")]
-        [ProducesResponseType(200, Type = typeof(Reviewer))]
-        public IActionResult GetReviewerByReview(int reviewId)
+        [HttpGet("byreveiwer/{reviewerId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
+        public IActionResult GetReviewsByReviewer(int reviewerId)
         {
-            var reviewer = _mapper.Map<ReviewerDto>(_reviewRepository.GetReviewerByReview(reviewId));
+            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepository.GetReviewsByReviewer(reviewerId));
             if(!ModelState.IsValid)
                 return BadRequest();
 
-            return Ok(reviewer);
+            return Ok(reviews);
         }
 
 
-        [HttpGet("review/{pokemonId}")]
+        [HttpGet("bypokemon/{pokemonId}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
         public IActionResult GetReviewsByPokemon(int pokemonId)
         {

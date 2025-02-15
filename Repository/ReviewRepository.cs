@@ -16,9 +16,9 @@ namespace PokemonReviewApp.Repository
             return _dataContext.Reviews.Where(r => r.Id == reviewId).FirstOrDefault();
         }
 
-        public Reviewer GetReviewerByReview(int reviewId)
+        public ICollection<Review> GetReviewsByReviewer(int reviewerId)
         {
-            return _dataContext.Reviews.Where(r => r.Id == reviewId).Select(rr => rr.Reviewer).FirstOrDefault();
+            return _dataContext.Reviews.Where(r => r.Reviewer.Id == reviewerId).ToList();
         }
 
         public ICollection<Review> GetReviews()
@@ -29,7 +29,7 @@ namespace PokemonReviewApp.Repository
         public ICollection<Review> GetReviewsByPokemon(int pokemonId)
         {
             return _dataContext.Reviews.Where(p => p.Pokemon.Id == pokemonId).ToList();
-        }
+        }       
 
         public bool IfReviewExists(int reviewId)
         {

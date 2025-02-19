@@ -13,12 +13,14 @@ namespace PokemonReviewApp.Controllers
     public class OwnerController : ControllerBase
     {
         private readonly IOwnerRepository _ownerRepository;
+        private readonly ICountryRepository _countryRepository;
         private readonly IMapper _mapper;
 
-        public OwnerController(IOwnerRepository ownerRepository, IMapper mapper)
+        public OwnerController(IOwnerRepository ownerRepository, IMapper mapper, ICountryRepository countryRepository)
         {
             _ownerRepository = ownerRepository;
             _mapper = mapper;
+            _countryRepository = countryRepository;
         }
 
         [HttpGet]
@@ -57,7 +59,7 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetOwnersByPokemon(int pokemonId)
         {
             var owners = _mapper.Map<List<OwnerDto>>(_ownerRepository.GetOwnersByPokemon(pokemonId));
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest();
 
             return Ok(owners);
@@ -85,6 +87,42 @@ namespace PokemonReviewApp.Controllers
                 return BadRequest();
 
             return Ok(country);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateOwner([FromQuery] int countryId, [FromBody] OwnerDto createOwner) //the owner and the country table has a relationship and the countryid is the foreign key. So when we're trying to add a new entity we should pass the countryId too, otherwise it'll give some errors. 
+            //for use the country id we're giving it in the method parameter. so that we can add the entity with it. formquery attribute prvides that. 
+        {
+            if (createOwner == null)
+                return BadRequest(ModelState);
+
+            var country = _ownerRepository.GetOwners()
+                .Where(c => c.LastName.Trim().ToUpper() == createOwner.LastName.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (country != null)
+            {
+                ModelState.AddModelError("", "Owner already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var ownerMap = _mapper.Map<Owner>(createOwner); //we're transforming the entity which is OwnerDto type to Owner
+            ownerMap.Country = _countryRepository.GetById(countryId); //there is a relationship between owner and country in the owner entity. we are getting the country by its id and aligning it to the Country from the Owner entity. 
+            //we're aligning the whole entity of Country. But in Owners table there's only the id property of the Country. So that only that will be adding to the database. 
+
+
+            if (!_ownerRepository.CreateOwner(ownerMap)) //then we are adding the entity to the database with this ownerMap variable.
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Owner created successfully");
         }
     }
 }

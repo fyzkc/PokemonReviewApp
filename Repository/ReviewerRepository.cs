@@ -11,6 +11,7 @@ namespace PokemonReviewApp.Repository
         {
             _dataContext = dataContext;
         }
+
         public Reviewer GetById(int reviewerId)
         {
             return _dataContext.Reviewers.Where(r => r.Id == reviewerId).FirstOrDefault();
@@ -29,6 +30,18 @@ namespace PokemonReviewApp.Repository
         public bool IfReviewerExists(int reviewerId)
         {
             return _dataContext.Reviewers.Any(r => r.Id == reviewerId);
+        }
+
+        public bool CreateReviewer(Reviewer reviewer)
+        {
+            _dataContext.Add(reviewer);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _dataContext.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

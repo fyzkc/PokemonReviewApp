@@ -12,9 +12,8 @@ namespace PokemonReviewApp.Interfaces
         bool IfPokemonExists(int pokemonId); // it gets if the pokemon exists or not by its id number
         bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon);
         //when we add a new entity to the Pokemons table, we must change the PokemonOwners and PokemonCategories tables too.
-        //Because PokemonId id the foreign key for those tables. 
+        //Because a Pokemon must have a relationship between owner and the category.
         //so that when we are creating a new pokemon, we should create a new record to PokemonOwners and PokemonCategories tables too. 
-
         bool Save();
     }
 }

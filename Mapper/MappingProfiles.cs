@@ -9,6 +9,7 @@ namespace PokemonReviewApp.Mapper
         public MappingProfiles() 
         {
             CreateMap<Pokemon, PokemonDto>(); // it will map the data between Pokemon and the PokemonDto classes. 
+            CreateMap<PokemonDto, Pokemon>();
             CreateMap<Category, CategoryDto>();
             CreateMap<CategoryDto, Category>();
             CreateMap<Country, CountryDto>();

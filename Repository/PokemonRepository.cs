@@ -58,5 +58,36 @@ namespace PokemonReviewApp.Repository
             return _context.Pokemons.Any(p=> p.Id == pokemonId);
             // Any() method checks whether the data is exists or not. 
         }
+
+        public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        {
+            var owner = _context.Owners.Where(o => o.Id == ownerId).FirstOrDefault(); //finding the record of the ownerId
+            var category = _context.Categories.Where(c=> c.Id == categoryId).FirstOrDefault(); //finding the record of the categoryId
+
+            var pokemonOwner = new PokemonOwner() //we are creating a new entity of PokemonOwner for adding to the database table
+            {
+                Owner = owner, //the Owner property from the PokemonOwner is the owner varible which we find it by using ownerId
+                Pokemon = pokemon //the Pokemon property from the PokemonOwner is the pokemon varible which we passed it from the parameter of this method. 
+            };
+
+            _context.Add(pokemonOwner); //we are adding this new entity to the PokemonOwners table in the database.
+
+            var pokemonCategory = new PokemonCategory()
+            {
+                Category = category,
+                Pokemon = pokemon
+            };
+
+            _context.Add(pokemonCategory);
+            _context.Add(pokemon); //we also adding the pokemon entity to the database table of Pokemons. 
+            return Save();
+
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

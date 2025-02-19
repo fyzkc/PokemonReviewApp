@@ -46,5 +46,11 @@ namespace PokemonReviewApp.Repository
             var saved = _context.SaveChanges(); //this method belongs to entity framework and it provides to apply the changes to the database. 
             return saved > 0 ? true : false; //this means if saved is bigger than 0 then return true; if not then return false. 
         }
+
+        public bool UpdateCategory(Category category)
+        {
+            _context.Update(category);
+            return Save();
+        }
     }
 }

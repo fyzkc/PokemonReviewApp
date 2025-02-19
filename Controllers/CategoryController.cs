@@ -101,5 +101,34 @@ namespace PokemonReviewApp.Controllers
 
             return Ok("Category created successfully"); //if there's no problem then the method will save the entity to the database and we can show a successful message. 
         }
+
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory(int categoryId,  [FromBody] CategoryDto category)
+        {
+            if (category == null)
+                return BadRequest(ModelState);
+
+            if(categoryId != category.Id)
+                return BadRequest(ModelState);
+
+            if (!_categoryRepository.IfCategoryExists(categoryId))
+                return NotFound();
+            
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var categoryMap = _mapper.Map<Category>(category);
+
+            if(!_categoryRepository.UpdateCategory(categoryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500,ModelState);
+            }
+
+            return Ok("Category successfully updated");
+        }
     }
 }

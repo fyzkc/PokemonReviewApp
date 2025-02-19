@@ -48,7 +48,7 @@ namespace PokemonReviewApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(category); 
+            return Ok(category);
         }
 
         [HttpGet("pokemon/{categoryId}")]
@@ -64,6 +64,42 @@ namespace PokemonReviewApp.Controllers
             return Ok(pokemons);
         }
 
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateCategory([FromBody] CategoryDto createCategory)
+        {
+            if (createCategory == null) //first we are checking if the entity that we gave as a parameter and want to add to the database is null or not.
+                return BadRequest(ModelState);
 
+            var category = _categoryRepository.GetCategories()
+                .Where(c => c.Name.Trim().ToUpper() == createCategory.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            //Trim method removes the spaces from the text's begginning and the ending. 
+            //ToUpper method makes the text's all letters upper. 
+            //we are checking that if theres already a category with that name or not. 
+            //if there's already a record with this same name, FirstOrDefault method will retun this record.
+            //if there's no record with that spesific name, than the method will return null. 
+
+            if(category != null) // if returned value isn't null, that means there's already a record with that spesific name.
+            {
+                ModelState.AddModelError("", "Category already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var categoryMap = _mapper.Map<Category>(createCategory); //we are mapping the entity to the CategoryDto.
+
+            if(!_categoryRepository.CreateCategory(categoryMap)) //we are running the creating method from the repository and if it will return false, then it means there had some problem while saving. 
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Category created successfully"); //if there's no problem then the method will save the entity to the database and we can show a successful message. 
+        }
     }
 }

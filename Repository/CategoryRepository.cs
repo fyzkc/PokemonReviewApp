@@ -34,5 +34,17 @@ namespace PokemonReviewApp.Repository
         {
             return _context.Categories.Any(c => c.Id == categoryId);
         }
+
+        public bool CreateCategory(Category category)
+        {
+            _context.Add(category); //this method create a new entity in the database onto the table.
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges(); //this method belongs to entity framework and it provides to apply the changes to the database. 
+            return saved > 0 ? true : false; //this means if saved is bigger than 0 then return true; if not then return false. 
+        }
     }
 }

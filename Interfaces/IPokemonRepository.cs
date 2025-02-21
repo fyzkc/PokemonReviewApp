@@ -14,6 +14,7 @@ namespace PokemonReviewApp.Interfaces
         //when we add a new entity to the Pokemons table, we must change the PokemonOwners and PokemonCategories tables too.
         //Because a Pokemon must have a relationship between owner and the category.
         //so that when we are creating a new pokemon, we should create a new record to PokemonOwners and PokemonCategories tables too. 
+        bool UpdatePokemon(Pokemon pokemon);
         bool Save();
     }
 }

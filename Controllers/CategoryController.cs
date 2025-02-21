@@ -102,7 +102,7 @@ namespace PokemonReviewApp.Controllers
             return Ok("Category created successfully"); //if there's no problem then the method will save the entity to the database and we can show a successful message. 
         }
 
-        [HttpPut]
+        [HttpPut("{categoryId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

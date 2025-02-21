@@ -103,7 +103,7 @@ namespace PokemonReviewApp.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPut("{countryId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

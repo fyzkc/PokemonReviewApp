@@ -15,10 +15,12 @@ namespace PokemonReviewApp.Controllers
         // whatever the class that inherits the IPokemonRepository can be injected here. 
         // The injection will be made in Program.cs.
         private readonly IPokemonRepository _pokemonRepository;
+        private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
-        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper)
+        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper, IReviewRepository reviewRepository)
         {
             _pokemonRepository = pokemonRepository;
+            _reviewRepository = reviewRepository;
             _mapper = mapper;
         }
 
@@ -129,6 +131,35 @@ namespace PokemonReviewApp.Controllers
             }
 
             return Ok("Pokemon successfully updated");
+        }
+
+        [HttpDelete("{pokemonId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeletePokemon(int pokemonId)
+        {
+            if (!_pokemonRepository.IfPokemonExists(pokemonId))
+                return NotFound();
+
+            var reviewsToDelete = _reviewRepository.GetReviewsByPokemon(pokemonId);
+            var pokemonToDelete = _pokemonRepository.GetById(pokemonId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if(!_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting reviews");
+            }
+
+            if (!_pokemonRepository.DeletePokemon(pokemonToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting pokemons");
+            }
+
+            return Ok("Pokemon successfully deleted.");
+
         }
     }
 }

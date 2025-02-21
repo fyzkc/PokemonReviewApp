@@ -15,6 +15,7 @@ namespace PokemonReviewApp.Interfaces
         //Because a Pokemon must have a relationship between owner and the category.
         //so that when we are creating a new pokemon, we should create a new record to PokemonOwners and PokemonCategories tables too. 
         bool UpdatePokemon(Pokemon pokemon);
+        bool DeletePokemon(Pokemon pokemon);
         bool Save();
     }
 }

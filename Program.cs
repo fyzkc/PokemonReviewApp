@@ -8,13 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-//whatever the class that inherits IPokemonRepository interface, can be injected in here. 
-//we are using PokemonRepository class now, but if we want to use another class that inherits IPokemonRepository interface,
-//we can use it too by injecting to here.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //this code adds the AutoMapper into the Dependency Injection Container.
 //and find the classes that inherited from the Profile class, and restore these mapping classes. 
 builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+//whatever the class that inherits IPokemonRepository interface, can be injected in here. 
+//we are using PokemonRepository class now, but if we want to use another class that inherits IPokemonRepository interface,
+//we can use it too by injecting to here.
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
